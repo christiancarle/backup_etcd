@@ -7,8 +7,8 @@
 
 #if [ "$ACTIVESTATE" = "ActiveState=active" ] && [ "$SUBSTATE" = "SubState=running" ] && [ $MINSIZE -le $DB_SIZE ] && grep -qs '/nas_etcd' /proc/mounts
 #then
-mkdir -p /nas_etcd/etcd_backup/`hostname -s`/etcd-config-$(date +%Y%m%d)/
-cp -R /etc/etcd/ /nas_etcd/etcd_backup/`hostname -s`/etcd-config-$(date +%Y%m%d)/
-mkdir -p /nas_etcd/etcd_backup/`hostname -s`/etcd-data-$(date +%Y%m%d)
-etcdctl --cert="/etc/etcd/peer.crt" --key="/etc/etcd/peer.key" --cacert="/etc/etcd/ca.crt"  --endpoints https://`hostname`:2379 snapshot save /nas_etcd/etcd_backup/`hostname -s`/etcd-data-$(date +%Y%m%d)/db
+#mkdir -p /nas_etcd/etcd_backup/`hostname -s`/etcd-config-$(date +%Y%m%d)/
+#cp -R /etc/etcd/ /nas_etcd/etcd_backup/`hostname -s`/etcd-config-$(date +%Y%m%d)/
+#mkdir -p /nas_etcd/etcd_backup/`hostname -s`/etcd-data-$(date +%Y%m%d)
+#/tmp/etcd/etcdctl --cert="/etc/etcd/peer.crt" --key="/etc/etcd/peer.key" --cacert="/etc/etcd/ca.crt"  --endpoints https://`hostname`:2379 snapshot save /nas_etcd/etcd_backup/`hostname -s`/etcd-data-$(date +%Y%m%d)/db
 curl -X POST 'http://gotsva1240.got.volvocars.net:9093/api/v1/alerts' -d '[{"labels":{"alertname":"EtcdBackupFail","cluster":"Bravo","instance":"'"`hostname`"'","severity":"warning"}}],"receivers":["masp-test"]'
