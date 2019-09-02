@@ -5,7 +5,7 @@
 MINSIZE=45
 DB_SIZE=`du -m /var/lib/etcd/member/snap/db | cut -f 1`
 
-if [ "$ACTIVESTATE" = "ActiveState=active" ] && [ "$SUBSTATE" = "SubState=running" ] && [ $MINSIZE -le $DB_SIZE ] && grep -qs '/nas_etcd' /proc/mounts
+if [ $MINSIZE -le $DB_SIZE ] && grep -qs '/nas_etcd' /proc/mounts
 then
   mkdir -p /nas_etcd/etcd_backup/`hostname -s`/etcd-config-$(date +%Y%m%d)/
   cp -R /etc/etcd/ /nas_etcd/etcd_backup/`hostname -s`/etcd-config-$(date +%Y%m%d)/
