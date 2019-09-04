@@ -1,20 +1,18 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: backup-etcd
-#  namespace: backup
+  name: backup-etcd-gotsva1142
+  namespace: backup
 spec:
-  schedule: "*/2 * * * *"
+  schedule: "37 23 * * *"
   jobTemplate:
     spec:
       template:
         metadata:
-          labels:
-            parent: "cronjobreport"
         spec:
           serviceAccountName: backup-etcd
           containers:
-          - name: backup-etcd
+          - name: backup-etcd-gotsva1142
             image: docker.io/christiancarle/etcd_backup:latest
             args:
             - /bin/sh 
@@ -30,16 +28,15 @@ spec:
               privileged: true
           hostNetwork: true
           nodeSelector:
-            node-role.kubernetes.io/master: "true"
-#          tolerations:
-#          - effect: NoSchedule
-#            operator: Exists
+            kubernetes.io/hostname: gotsva1142.volvocars.biz
+          tolerations:
+          - effect: NoSchedule
+            operator: Exists
           restartPolicy: OnFailure
           volumes:
           - name: etcd-db
             hostPath:
               path: /var/lib/etcd/member/snap
-#              type: DirectoryOrCreate
           - name: etcd-config
             hostPath:
               path: /etc/etcd

@@ -1,0 +1,46 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup-etcd-gotsva1044
+  namespace: backup
+spec:
+  schedule: "33 23 * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+        spec:
+          serviceAccountName: backup-etcd
+          containers:
+          - name: backup-etcd-gotsva1044
+            image: docker.io/christiancarle/etcd_backup:latest
+            args:
+            - /bin/sh 
+            - -c
+            volumeMounts:
+            - mountPath: /var/lib/etcd/member/snap
+              name: etcd-db
+            - mountPath: /etc/etcd
+              name: etcd-config
+            - mountPath: /nas_etcd
+              name: etcd-nas
+            securityContext:
+              privileged: true
+          hostNetwork: true
+          nodeSelector:
+            kubernetes.io/hostname: gotsva1044.volvocars.biz
+          tolerations:
+          - effect: NoSchedule
+            operator: Exists
+          restartPolicy: OnFailure
+          volumes:
+          - name: etcd-db
+            hostPath:
+              path: /var/lib/etcd/member/snap
+          - name: etcd-config
+            hostPath:
+              path: /etc/etcd
+          - name: etcd-nas
+            nfs:
+              path: /9413-APP-NASMASPAppLogs
+              server: gotsnm5104.got.volvocars.net
